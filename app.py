@@ -20,15 +20,22 @@ def show_pe(code):
 def get_index_stock(id):
     session = requests.session()
     r = session.get(
-        f'http://vip.stock.finance.sina.com.cn/corp/go.php/vII_NewestComponent/indexid/{id}.phtml')# 解析HTML
-    print(r.text)
+        f'http://vip.stock.finance.sina.com.cn/corp/go.php/vII_NewestComponent/indexid/{id}.phtml')  # 解析HTML
+    # print(r.text)
     html = etree.HTML(r.content)
-    stock_code = html.xpath("//table[@id='NewStockTable']//tr/td[1]/div/text()")
+    # stock_code = html.xpath("//table[@id='NewStockTable']//tr/td[1]/div/text()")
     stock_url = html.xpath("//table[@id='NewStockTable']//tr//a/@href")
     stock_name = html.xpath("//table[@id='NewStockTable']//tr//a/text()")
-    print(stock_url)
-    rr = dict(zip(stock_name, stock_url))
-    return rr
+    # print(stock_url)
+    stock_code = []
+    for s in stock_url:
+        stock_code.append(s.split('/')[5])
+    dict_stock = dict(zip(stock_code, stock_name))
+    ms = MyStock()
+    res = ''
+    for sc in dict_stock:
+        res += sc + ':' + dict_stock[sc] + ':' + str(ms.catch_pe(sc)) + '<br>'
+    return res
 
 
 class MyStock:
@@ -41,10 +48,10 @@ class MyStock:
     # 获取pe_ttm
     def catch_pe(self, code):
         url = f'https://stock.xueqiu.com/v5/stock/quote.json?symbol={code}&extend=detail'
-        print(url)
+        # print(url)
         r = self.session.get(url, headers=self.headers, verify=False)
         rj = r.json()
-        print(rj)
+        # print(rj)
         return rj['data']['quote']['pe_ttm']
 
 
