@@ -9,13 +9,13 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World!'
 
-
+# 获取股票的TTM市盈率
 @app.route('/pe_ttm/<code>')
 def show_pe(code):
     ms = MyStock()
     return str(ms.catch_pe(code))
 
-
+# 获取指数的成分股
 @app.route('/indexid/<id>')
 def get_index_stock(id):
     session = requests.session()
