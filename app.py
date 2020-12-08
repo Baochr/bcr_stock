@@ -47,7 +47,7 @@ class MyStock:
 
     # 获取pe_ttm
     def catch_pe(self, code):
-        url = f'https://stock.xueqiu.com/v5/stock/quote.json?symbol={code}&extend=detail'
+        url = f'https://stock.xueqiu.com/v5/stock/quote.json?symbol={code.upper()}&extend=detail'
         # print(url)
         r = self.session.get(url, headers=self.headers, verify=False)
         rj = r.json()
